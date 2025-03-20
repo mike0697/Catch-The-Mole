@@ -1,13 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://gqi2myj10hiu"]
+[gd_scene load_steps=6 format=3 uid="uid://gqi2myj10hiu"]
 
 [ext_resource type="Texture2D" uid="uid://cmsm556fanar" path="res://Assets/background1.png" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://b6276ybqkbuqs" path="res://Scripts/game.gd" id="1_feb5d"]
 [ext_resource type="PackedScene" uid="uid://kv04obmjxhak" path="res://Scenes/talpa.tscn" id="2_fc0e3"]
+[ext_resource type="PackedScene" uid="uid://ddqolynja6nso" path="res://Scenes/zucca.tscn" id="3_7jktm"]
 [ext_resource type="Script" uid="uid://b3ay6q0tu2xe4" path="res://Scripts/mole_positions.gd" id="4_ryrav"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_feb5d")
 mole_scene = ExtResource("2_fc0e3")
+pumpkin_scene = ExtResource("3_7jktm")
 
 [node name="Background" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
@@ -49,12 +51,25 @@ offset_right = 20.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="LabelScore" type="Label" parent="UI/Score"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Score"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -42.0
+offset_top = -50.0
+offset_right = 42.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="LabelScore" type="Label" parent="UI/Score/VBoxContainer"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+layout_mode = 2
 text = "Score: 0"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="MolePositions" type="Node2D" parent="."]
 script = ExtResource("4_ryrav")

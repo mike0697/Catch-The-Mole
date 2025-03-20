@@ -2,18 +2,20 @@ extends Node2D
 
 var lives: int = 3 # vite iniziali
 var score: int = 0 # score iniziale
-# Array per tenere traccia di tutte le talpe attive
+# Array per tenere traccia di tutte le talpe e zucche attive
 var active_moles = []
-# Prefab della talpa che verrà istanziato
+var active_pumpkins = []
+# Prefab della talpa e della zucca che verranno istanziati
 @export var mole_scene: PackedScene
+@export var pumpkin_scene: PackedScene
 
 func _ready():
 	%LabelLives.text = "Lives: " + str(lives) + " "
 	%LabelScore.text = "Score: " + str(score) + " "
 	# Inizia il gioco
-	spawn_moles()
+	spawn_objects()
 
-func spawn_moles():
+func spawn_objects():
 	# Timer per generare nuove talpe periodicamente
 	var spawn_timer = Timer.new()
 	add_child(spawn_timer)
@@ -37,13 +39,23 @@ func _on_spawn_timer_timeout():
 	var random_position = free_positions[randi() % free_positions.size()]
 	# Marca la posizione come occupata
 	random_position.set_meta("occupied", true)
+	
+	# Decidi casualmente se spawnare una talpa o una zucca (70% talpa, 30% zucca)
+	if randf() < 0.7:
+		spawn_mole(random_position)
+	else:
+		spawn_pumpkin(random_position)
+	
+	
+	
+func spawn_mole(position):
 	# Crea una nuova talpa
 	var mole = mole_scene.instantiate()
 	add_child(mole)
 	# Posiziona la talpa nello spawn point scelto
-	mole.global_position = random_position.global_position
+	mole.global_position = position.global_position
 	# Salva il riferimento allo spawn point nella talpa
-	mole.spawn_point = random_position
+	mole.spawn_point = position
 	# Connetti i segnali della talpa
 	mole.connect("clicked", Callable(self, "_on_mole_clicked"))
 	mole.connect("timeout", Callable(self, "_on_mole_timeout"))
@@ -51,6 +63,23 @@ func _on_spawn_timer_timeout():
 	mole.appear(randf_range(1.5, 3.0))
 	# Aggiungi la talpa all'array delle talpe attive
 	active_moles.append(mole)
+	
+func spawn_pumpkin(position):
+	# Crea una nuova zucca
+	var pumpkin = pumpkin_scene.instantiate()
+	add_child(pumpkin)
+	# Posiziona la zucca nello spawn point scelto
+	pumpkin.global_position = position.global_position
+	# Salva il riferimento allo spawn point nella zucca
+	pumpkin.spawn_point = position
+	# Connetti i segnali della zucca
+	pumpkin.connect("clicked", Callable(self, "_on_pumpkin_clicked"))
+	pumpkin.connect("timeout", Callable(self, "_on_pumpkin_timeout"))
+	# Imposta un timer casuale per la zucca
+	pumpkin.appear(randf_range(2.0, 3.5))  # Le zucche rimangono un po' più a lungo
+	# Aggiungi la zucca all'array delle zucche attive
+	active_pumpkins.append(pumpkin)
+	
 
 func _on_mole_clicked(mole):
 	# Quando una talpa viene colpita
@@ -63,6 +92,18 @@ func _on_mole_timeout(mole):
 	update_lives(-1)  # Perdi una vita
 	mole.disappear()  # Attiva l'animazione di scomparsa
 	active_moles.erase(mole)  # Rimuovi dall'array
+	
+func _on_pumpkin_clicked(pumpkin):
+	# Quando una zucca viene colpita
+	update_lives(-1)  # Perdi una vita (effetto negativo)
+	pumpkin.hit()  # Attiva l'animazione di colpo
+	active_pumpkins.erase(pumpkin)  # Rimuovi dall'array
+
+func _on_pumpkin_timeout(pumpkin):
+	# Quando una zucca scompare senza essere colpita
+	# Non succede nulla di negativo, anzi è meglio non colpirla
+	pumpkin.disappear()  # Attiva l'animazione di scomparsa
+	active_pumpkins.erase(pumpkin)  # Rimuovi dall'array
 
 func update_score(points):
 	score = score + points
