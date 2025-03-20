@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://ceo2ibkekugm7"]
+
+[ext_resource type="Texture2D" uid="uid://jismfl8v7rt4" path="res://Assets/hole.png" id="1_4ah57"]
+
+[node name="Marker2D" type="Marker2D"]
+
+[node name="Buca" type="Sprite2D" parent="."]
+texture = ExtResource("1_4ah57")
