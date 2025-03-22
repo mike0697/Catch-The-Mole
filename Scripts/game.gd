@@ -13,6 +13,7 @@ func _ready():
 	%LabelLives.text = "Lives: " + str(lives) + " "
 	%LabelScore.text = "Score: " + str(score) + " "
 	# Inizia il gioco
+	
 	spawn_objects()
 
 func spawn_objects():
@@ -119,6 +120,9 @@ func update_lives(change):
 func game_over():
 	if score > Global.score_max:
 		Global.score_max = score
-		#todo game over new record!
+		%NewRecordLabel.visible = true
+	else:
+		%NewRecordLabel.visible = false
+	%ScoreLabel.text = "Score: " + str(score) + " "
 	$Menu/GameOver.show()
 	get_tree().paused = true
