@@ -84,6 +84,7 @@ func spawn_pumpkin(position):
 
 func _on_mole_clicked(mole):
 	# Quando una talpa viene colpita
+	%SoundHit.play()
 	update_score(10)  # Aggiungi punti
 	mole.hit()  # Attiva l'animazione di colpo
 	active_moles.erase(mole)  # Rimuovi dall'array
@@ -96,6 +97,7 @@ func _on_mole_timeout(mole):
 	
 func _on_pumpkin_clicked(pumpkin):
 	# Quando una zucca viene colpita
+	%SoundHit2.play()
 	update_lives(-1)  # Perdi una vita (effetto negativo)
 	pumpkin.hit()  # Attiva l'animazione di colpo
 	active_pumpkins.erase(pumpkin)  # Rimuovi dall'array
