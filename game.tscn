@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ddqolynja6nso" path="res://Scenes/zucca.tscn" id="3_7jktm"]
 [ext_resource type="Script" uid="uid://b3ay6q0tu2xe4" path="res://Scripts/mole_positions.gd" id="4_ryrav"]
 [ext_resource type="Script" uid="uid://bc60wncaycqy3" path="res://Scripts/menu.gd" id="6_eow3j"]
-[ext_resource type="Theme" uid="uid://da8vhrluvmuen" path="res://Assets/theme.tres" id="6_ryrav"]
+[ext_resource type="Theme" uid="uid://da8vhrluvmuen" path="res://theme/theme.tres" id="6_ryrav"]
 [ext_resource type="AudioStream" uid="uid://djpdwssmcyfnj" path="res://Assets/audio/Powerup_-_Jeremy_Blake.mp3" id="8_vef74"]
 [ext_resource type="AudioStream" uid="uid://chjf3b4nwwmy0" path="res://Assets/audio/jembay-hit-10-rim.wav" id="9_vef74"]
 [ext_resource type="AudioStream" uid="uid://ba4vkooojbsdd" path="res://Assets/audio/madpancake__hit-impact.ogg" id="10_hve3p"]
@@ -38,9 +38,16 @@ grow_horizontal = 2
 
 [node name="LabelLives" type="Label" parent="UI/Lives"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -64.0
+offset_top = 15.0
+offset_right = 64.0
+offset_bottom = 41.0
+grow_horizontal = 2
+theme = ExtResource("6_ryrav")
 text = "Lives: 3"
 
 [node name="Score" type="Control" parent="UI"]
@@ -64,17 +71,26 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -42.0
-offset_top = -50.0
+offset_top = -60.0
 offset_right = 42.0
+offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
 
 [node name="LabelScore" type="Label" parent="UI/Score/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("6_ryrav")
 text = "Score: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="LevelLabel" type="Label" parent="UI/Score/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("6_ryrav")
+text = "Level: 1"
+horizontal_alignment = 1
 
 [node name="MolePositions" type="Node2D" parent="."]
 script = ExtResource("4_ryrav")
@@ -149,6 +165,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="ColorRect" type="ColorRect" parent="Menu/StartMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.160784)
+
 [node name="CenterContainer" type="CenterContainer" parent="Menu/StartMenu"]
 layout_mode = 1
 anchors_preset = 15
@@ -160,10 +185,25 @@ grow_vertical = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="Menu/StartMenu/CenterContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Menu/StartMenu/CenterContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="Menu/StartMenu/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("6_ryrav")
+theme_type_variation = &"GraphFrameTitleLabel"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 3
+theme_override_constants/shadow_outline_size = 1
+theme_override_font_sizes/font_size = 24
 text = "Catch The Mole"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Menu/StartMenu/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme = ExtResource("6_ryrav")
 
 [node name="Start" type="Button" parent="Menu/StartMenu/CenterContainer/VBoxContainer"]
 layout_mode = 2

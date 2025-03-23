@@ -15,6 +15,10 @@ run/main_scene="uid://gqi2myj10hiu"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="res://theme/default_bus_layout.tres"
+
 [autoload]
 
 Global="*res://Scripts/Global.gd"

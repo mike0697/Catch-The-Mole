@@ -8,9 +8,17 @@ func _ready() -> void:
 	get_tree().paused = true
 	%Music.play()
 	if Global.music:
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"), false)
 		%MusicToggle.button_pressed = true
+	else:
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"), true)
+		%MusicToggle.button_pressed = false
 	if Global.sfx:
 		%SFXToggle.button_pressed = true
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("SFX"), false)
+	else:
+		%SFXToggle.button_pressed = false
+		AudioServer.set_bus_mute(AudioServer.get_bus_index("SFX"), true)
 	
 func _process(delta: float) -> void:
 	pass
@@ -44,12 +52,10 @@ func toggle_pause() -> void:
 
 func _on_music_toggled(toggled_on: bool) -> void:
 	if toggled_on:
-		# Se il CheckButton è selezionato, attiva l'audio del bus "Music"
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"), false)
 		print("Musica attivata")
 		Global.music = true 
 	else:
-		# Se il CheckButton è deselezionato, disattiva l'audio del bus "Music"
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Music"), true)
 		print("Musica disattivata")
 		Global.music = false
@@ -57,12 +63,10 @@ func _on_music_toggled(toggled_on: bool) -> void:
 
 func _on_sfx_toggle_toggled(toggled_on: bool) -> void:
 	if toggled_on:
-		# Se il CheckButton è selezionato, attiva l'audio del bus "Music"
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("SFX"), false)
 		print("SFX attivata")
 		Global.sfx = true 
 	else:
-		# Se il CheckButton è deselezionato, disattiva l'audio del bus "Music"
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("SFX"), true)
 		print("SFX disattivata")
 		Global.sfx = false

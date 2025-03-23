@@ -9,18 +9,34 @@ var active_pumpkins = []
 @export var mole_scene: PackedScene
 @export var pumpkin_scene: PackedScene
 
+# Variabili per la difficoltà
+var difficulty_level: int = 1
+var max_difficulty: int = 12
+var points_to_next_level: int = 100 # level *(points + (difficulty_level * 10))
+var spawn_interval: float = 0.9
+var min_spawn_interval: float = 0.2
+var spawn_interval_decrease: float = 0.1
+var spawn_interval_decrease_after_level_ten = 0.5
+var mole_duration_max: float = 2.6
+var mole_duration_min: float = 1.5
+var pumpkin_chance: float = 0.3
+
+# Per tenere traccia del timer di spawn
+var spawn_timer: Timer
+
 func _ready():
 	%LabelLives.text = "Lives: " + str(lives) + " "
 	%LabelScore.text = "Score: " + str(score) + " "
-	# Inizia il gioco
+	%LevelLabel.text = "Level: " + str(difficulty_level)
 	
+	# Inizia il gioco
 	spawn_objects()
 
 func spawn_objects():
 	# Timer per generare nuove talpe periodicamente
-	var spawn_timer = Timer.new()
+	spawn_timer = Timer.new()
 	add_child(spawn_timer)
-	spawn_timer.wait_time = 0.8  # Regola in base alla difficoltà
+	spawn_timer.wait_time = spawn_interval
 	spawn_timer.timeout.connect(_on_spawn_timer_timeout)
 	spawn_timer.start()
 
@@ -41,13 +57,11 @@ func _on_spawn_timer_timeout():
 	# Marca la posizione come occupata
 	random_position.set_meta("occupied", true)
 	
-	# Decidi casualmente se spawnare una talpa o una zucca (70% talpa, 30% zucca)
-	if randf() < 0.7:
+	# Decidi casualmente se spawnare una talpa o una zucca (probabilità basata sul livello)
+	if randf() < (1.0 - pumpkin_chance):
 		spawn_mole(random_position)
 	else:
 		spawn_pumpkin(random_position)
-	
-	
 	
 func spawn_mole(position):
 	# Crea una nuova talpa
@@ -60,8 +74,12 @@ func spawn_mole(position):
 	# Connetti i segnali della talpa
 	mole.connect("clicked", Callable(self, "_on_mole_clicked"))
 	mole.connect("timeout", Callable(self, "_on_mole_timeout"))
-	# Imposta un timer casuale per la talpa
-	mole.appear(randf_range(1.5, 3.0))
+	
+	# Durata della talpa basata sulla difficoltà
+	var duration = mole_duration_max - ((difficulty_level - 1) * 0.15)
+	duration = max(duration, mole_duration_min)  # Non scendere sotto il minimo
+	
+	mole.appear(duration)
 	# Aggiungi la talpa all'array delle talpe attive
 	active_moles.append(mole)
 	
@@ -76,12 +94,15 @@ func spawn_pumpkin(position):
 	# Connetti i segnali della zucca
 	pumpkin.connect("clicked", Callable(self, "_on_pumpkin_clicked"))
 	pumpkin.connect("timeout", Callable(self, "_on_pumpkin_timeout"))
-	# Imposta un timer casuale per la zucca
-	pumpkin.appear(randf_range(2.0, 3.5))  # Le zucche rimangono un po' più a lungo
+	
+	# Durata della zucca basata sulla difficoltà
+	var duration = mole_duration_max - ((difficulty_level - 1) * 0.1)
+	duration = max(duration, mole_duration_min)
+	
+	pumpkin.appear(duration)
 	# Aggiungi la zucca all'array delle zucche attive
 	active_pumpkins.append(pumpkin)
 	
-
 func _on_mole_clicked(mole):
 	# Quando una talpa viene colpita
 	%SoundHit.play()
@@ -111,9 +132,62 @@ func _on_pumpkin_timeout(pumpkin):
 func update_score(points):
 	score = score + points
 	%LabelScore.text = "Score: " + str(score) + " "
+	
+	# Controlla se è il momento di aumentare la difficoltà
+	check_difficulty_increase()
+
+func check_difficulty_increase():
+	if difficulty_level >= max_difficulty:
+		return  # Già al livello massimo
+		
+	var next_level_threshold = difficulty_level * (points_to_next_level + (difficulty_level * 10))
+	
+	if score >= next_level_threshold:
+		increase_difficulty()
+
+func increase_difficulty():
+	difficulty_level += 1
+	
+	# Aggiorna l'etichetta del livello
+	%LevelLabel.text = "Level: " + str(difficulty_level)
+	
+	# Mostra un messaggio di livello
+	show_level_message()
+	
+	# Aumenta la frequenza di spawn riducendo l'intervallo
+	if difficulty_level < 10:
+		spawn_interval -= spawn_interval_decrease
+	else:
+		spawn_interval -= spawn_interval_decrease_after_level_ten
+	spawn_interval = max(spawn_interval, min_spawn_interval)
+	spawn_timer.wait_time = spawn_interval
+	
+	# Aumenta la probabilità di zucche
+	pumpkin_chance = min(pumpkin_chance + 0.05, 0.5)  # Max 50% zucche
+	
+	# Puoi anche modificare altre variabili in base al livello
+	print("Livello aumentato a: ", difficulty_level)
+	print("Intervallo di spawn: ", spawn_interval)
+	print("Probabilità zucca: ", pumpkin_chance)
+
+func show_level_message():
+	var level_label = Label.new()
+	level_label.text = "Level " + str(difficulty_level)
+	level_label.add_theme_font_size_override("font_size", 48)
+	level_label.set_anchors_preset(Control.PRESET_CENTER)
+	level_label.position = Vector2(216, 384)  # Posizione al centro dello schermo
+	level_label.modulate = Color(1, 1, 1, 1)
+	add_child(level_label)
+	
+	# Animazione per il messaggio di livello
+	var tween = create_tween()
+	tween.tween_property(level_label, "modulate", Color(1, 1, 1, 0), 2.0)
+	tween.tween_callback(level_label.queue_free)
+	
+	# Puoi aggiungere un effetto sonoro qui
+	# %SoundLevelUp.play()
 
 func update_lives(change):
-	#todo metti gli sprite heart per rappresentare le vite
 	lives = lives + change
 	%LabelLives.text = "Lives: " + str(lives) + " "
 	if lives <= 0:
