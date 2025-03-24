@@ -1,36 +1,40 @@
 extends Node2D
 
-var lives: int = 3 # vite iniziali
-var score: int = 0 # score iniziale
-# Array per tenere traccia di tutte le talpe e zucche attive
-var active_moles = []
-var active_pumpkins = []
-# Prefab della talpa e della zucca che verranno istanziati
+@export_group("Game Objects")
 @export var mole_scene: PackedScene
 @export var pumpkin_scene: PackedScene
 
 # Variabili per la difficoltà
 var difficulty_level: int = 1
-var max_difficulty: int = 12
+var max_difficulty: int = 15
 var points_to_next_level: int = 100 # level *(points + (difficulty_level * 10))
 var spawn_interval: float = 0.9
-var min_spawn_interval: float = 0.2
+var min_spawn_interval: float = 0.25
 var spawn_interval_decrease: float = 0.1
-var spawn_interval_decrease_after_level_ten = 0.5
+var spawn_interval_decrease_after_level_five = 0.05
+var spawn_interval_decrease_after_level_seven = 0.02
 var mole_duration_max: float = 2.6
 var mole_duration_min: float = 1.5
 var pumpkin_chance: float = 0.3
 
-# Per tenere traccia del timer di spawn
+# Variabili di stato del gioco
+var lives: int = 3 # vite iniziali
+var score: int = 0 # score iniziale
+
+
+# Tracciamento degli oggetti di gioco
+var active_moles = []
+var active_pumpkins = []
 var spawn_timer: Timer
 
 func _ready():
-	%LabelLives.text = "Lives: " + str(lives) + " "
-	%LabelScore.text = "Score: " + str(score) + " "
-	%LevelLabel.text = "Level: " + str(difficulty_level)
-	
-	# Inizia il gioco
+	initialize_game()
 	spawn_objects()
+	
+func initialize_game():
+	%LabelLives.text = "Lives: " + str(lives)
+	%LabelScore.text = "Score: " + str(score)
+	%LevelLabel.text = "Level: " + str(difficulty_level)
 
 func spawn_objects():
 	# Timer per generare nuove talpe periodicamente
@@ -154,11 +158,17 @@ func increase_difficulty():
 	# Mostra un messaggio di livello
 	show_level_message()
 	
-	# Aumenta la frequenza di spawn riducendo l'intervallo
-	if difficulty_level < 10:
+	# Modifica l'intervallo di spawn in base al livello di difficoltà
+	if difficulty_level < 5:
+		# Livelli da 1 a 4
 		spawn_interval -= spawn_interval_decrease
+	elif difficulty_level < 7:
+		# Livelli da 5 a 7
+		spawn_interval -= spawn_interval_decrease_after_level_five
 	else:
-		spawn_interval -= spawn_interval_decrease_after_level_ten
+		# Livelli da 7 in su
+		spawn_interval -= spawn_interval_decrease_after_level_seven
+		
 	spawn_interval = max(spawn_interval, min_spawn_interval)
 	spawn_timer.wait_time = spawn_interval
 	
@@ -173,9 +183,10 @@ func increase_difficulty():
 func show_level_message():
 	var level_label = Label.new()
 	level_label.text = "Level " + str(difficulty_level)
-	level_label.add_theme_font_size_override("font_size", 48)
+	level_label.theme = preload("res://theme/theme.tres")
+	level_label.add_theme_font_size_override("font_size", 35)
 	level_label.set_anchors_preset(Control.PRESET_CENTER)
-	level_label.position = Vector2(216, 384)  # Posizione al centro dello schermo
+	level_label.position = Vector2(140, 384)  # Posizione al centro dello schermo
 	level_label.modulate = Color(1, 1, 1, 1)
 	add_child(level_label)
 	

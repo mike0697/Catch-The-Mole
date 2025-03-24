@@ -4,6 +4,9 @@ var game_is_playing = false
 func _ready() -> void:
 	%StartMenu.visible = true
 	%GameOver.visible = false
+	%GamePause.visible = false
+	%HelpMenu.visible = false
+	%GlobalScores.visible = false
 	%MaxScoreLabel.text = "Max Score: " + str(Global.score_max)
 	get_tree().paused = true
 	%Music.play()
@@ -39,8 +42,11 @@ func _on_retry_pressed() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and game_is_playing:
-		if Input.is_action_just_pressed("pause"):
+		if Input.is_action_just_pressed("Pause"):
 			toggle_pause()
+		if Input.is_action_just_pressed("Restart"):
+			get_tree().paused = false
+			get_tree().reload_current_scene()
 
 func toggle_pause() -> void:
 	var new_state = not get_tree().paused
@@ -72,12 +78,23 @@ func _on_sfx_toggle_toggled(toggled_on: bool) -> void:
 		Global.sfx = false
 
 
-#func _on_back_pressed() -> void:
-	#%Credits.visible = false
-	#%GameMenu.visible = true
-	
+func _on_return_pause_pressed() -> void:
+	toggle_pause()
 
-#
-#func _on_b_credits_pressed() -> void:
-	#%Credits.visible = true
-	#%GameMenu.visible = false
+
+func _on_help_button_pressed() -> void:
+	%HelpMenu.visible = true
+	%StartMenu.visible = false
+
+func _on_back_from_help_pressed() -> void:
+	%HelpMenu.visible = false
+	%StartMenu.visible = true
+
+
+func _on_back_from_global_scores_pressed() -> void:
+	%StartMenu.visible = true
+	%GlobalScores.visible = false
+
+func _on_global_scores_pressed() -> void:
+	%StartMenu.visible = false
+	%GlobalScores.visible = true
