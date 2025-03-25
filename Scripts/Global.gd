@@ -9,7 +9,14 @@ var best_score = []
 func load_data():
 	var value = GPX.getItem("keysave")
 	if value != null:
+		print(str(value))
 		best_score = string_to_array(value)
+	else:
+		if best_score.size() < 10:
+			best_score.append(0)
+			var str = array_to_string(best_score)
+			GPX.setItem("keysave", str)
+		
 	
 func save_data(data: int):
 	load_data() #aggiorna i dati
@@ -22,29 +29,32 @@ func save_data(data: int):
 		
 #controlla se è stato fatto un nuovo record
 func check_data(data : int):
-	if data > best_score.min():
-		return true
+	if best_score.min() != null:
+		if data > best_score.min():
+			return true
+		else:
+			return false
 	else:
-		return false
+		return true
 		
 func insert_and_sort_array(arr: Array, new_value: int) -> Array:
-	# Verifica che l'array contenga esattamente 10 elementi
-	if arr.size() != 10:
+	if arr == null:
+		print("errore array == null")
 		return arr
-	
-	# Controlla se il nuovo valore è maggiore del minimo nell'array
-	var min_value = arr.min()
-	if new_value > min_value:
-		# Rimuovi il valore più piccolo
-		arr.erase(min_value)
 		
-		# Aggiungi il nuovo valore
+	if arr.size() < 10:
+		#aggiunge il valore all' array e lo ordina
 		arr.append(new_value)
-		
-		# Ordina l'array in ordine crescente
 		arr.sort()
-	
-	return arr
+		return arr
+	else:
+		# Controlla se il nuovo valore è maggiore del minimo nell'array
+		var min_value = arr.min()
+		if new_value > min_value:
+			arr.erase(min_value)
+			arr.append(new_value)
+			arr.sort()
+		return arr
 
 func string_to_array(input_string: String) -> Array:
 	# Dividi la stringa in base al separatore '|'
