@@ -208,6 +208,13 @@ func game_over():
 	if score > Global.score_max:
 		Global.score_max = score
 		%NewRecordLabel.visible = true
+		Global.load_data()
+		var new_record = Global.check_data(score)
+		if new_record:
+			Global.save_data(score)
+			%ScoreBoard.visible = true
+		else:
+			%ScoreBoard.visible = false
 	else:
 		%NewRecordLabel.visible = false
 	%ScoreLabel.text = "Score: " + str(score) + " "

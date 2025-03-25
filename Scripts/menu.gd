@@ -96,5 +96,9 @@ func _on_back_from_global_scores_pressed() -> void:
 	%GlobalScores.visible = false
 
 func _on_global_scores_pressed() -> void:
+	#scarica gli ultimi dati aggiornati
+	Global.load_data()
+	var res = Global.array_to_numbered_string(Global.best_score)
+	%Scores.text = str(res)
 	%StartMenu.visible = false
 	%GlobalScores.visible = true

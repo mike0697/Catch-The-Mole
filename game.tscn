@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://gqi2myj10hiu"]
+[gd_scene load_steps=11 format=3 uid="uid://gqi2myj10hiu"]
 
 [ext_resource type="Texture2D" uid="uid://cmsm556fanar" path="res://Assets/background1.png" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://b6276ybqkbuqs" path="res://Scripts/game.gd" id="1_feb5d"]
@@ -10,7 +10,6 @@
 [ext_resource type="AudioStream" uid="uid://djpdwssmcyfnj" path="res://Assets/audio/Powerup_-_Jeremy_Blake.mp3" id="8_vef74"]
 [ext_resource type="AudioStream" uid="uid://chjf3b4nwwmy0" path="res://Assets/audio/jembay-hit-10-rim.wav" id="9_vef74"]
 [ext_resource type="AudioStream" uid="uid://ba4vkooojbsdd" path="res://Assets/audio/madpancake__hit-impact.ogg" id="10_hve3p"]
-[ext_resource type="Script" uid="uid://bx4ueik5t0ixg" path="res://Scripts/manager_sdk.gd" id="11_mfdv2"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_feb5d")
@@ -103,7 +102,6 @@ script = ExtResource("6_eow3j")
 [node name="GameOver" type="Control" parent="Menu"]
 unique_name_in_owner = true
 process_mode = 3
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -135,6 +133,7 @@ layout_mode = 2
 layout_mode = 2
 theme = ExtResource("6_ryrav")
 text = "Game Over!"
+horizontal_alignment = 1
 
 [node name="ScoreLabel" type="Label" parent="Menu/GameOver/CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -150,6 +149,15 @@ layout_mode = 2
 theme = ExtResource("6_ryrav")
 text = "New Record!"
 horizontal_alignment = 1
+
+[node name="ScoreBoard" type="Label" parent="Menu/GameOver/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme = ExtResource("6_ryrav")
+text = "New Record in Global Score Board!!!"
+horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="Retry" type="Button" parent="Menu/GameOver/CenterContainer/VBoxContainer"]
 layout_mode = 2
@@ -346,6 +354,7 @@ text = "Back"
 
 [node name="GlobalScores" type="Control" parent="Menu"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -420,16 +429,12 @@ unique_name_in_owner = true
 stream = ExtResource("10_hve3p")
 volume_db = -9.0
 
-[node name="ManagerSdk" type="Node2D" parent="."]
-script = ExtResource("11_mfdv2")
-
 [connection signal="pressed" from="Menu/GameOver/CenterContainer/VBoxContainer/Retry" to="Menu" method="_on_retry_pressed"]
 [connection signal="pressed" from="Menu/StartMenu/CenterContainer/VBoxContainer/Start" to="Menu" method="_on_start_pressed"]
 [connection signal="toggled" from="Menu/StartMenu/CenterContainer/VBoxContainer/SFXToggle" to="Menu" method="_on_sfx_toggle_toggled"]
 [connection signal="toggled" from="Menu/StartMenu/CenterContainer/VBoxContainer/MusicToggle" to="Menu" method="_on_music_toggled"]
 [connection signal="pressed" from="Menu/StartMenu/CenterContainer/VBoxContainer/HelpButton" to="Menu" method="_on_help_button_pressed"]
 [connection signal="pressed" from="Menu/StartMenu/CenterContainer/VBoxContainer/GlobalScores" to="Menu" method="_on_global_scores_pressed"]
-[connection signal="pressed" from="Menu/StartMenu/CenterContainer/VBoxContainer/GlobalScores" to="ManagerSdk" method="_on_global_scores_pressed"]
 [connection signal="pressed" from="Menu/GamePause/CenterContainer/VBoxContainer/ReturnPause" to="Menu" method="_on_return_pause_pressed"]
 [connection signal="pressed" from="Menu/HelpMenu/CenterContainer/VBoxContainer/BackFromHelp" to="Menu" method="_on_back_from_help_pressed"]
 [connection signal="pressed" from="Menu/GlobalScores/CenterContainer/VBoxContainer/BackFromGlobalScores" to="Menu" method="_on_back_from_global_scores_pressed"]
