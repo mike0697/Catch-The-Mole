@@ -11,6 +11,8 @@ config_version=5
 [application]
 
 config/name="CatchTheMole"
+config/description="A fast-paced arcade game where players tap moles popping up from holes while avoiding pumpkins. As levels progress, the game becomes more challenging with faster moles, more holes, and increased complexity."
+config/version="1.1"
 run/main_scene="uid://gqi2myj10hiu"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"

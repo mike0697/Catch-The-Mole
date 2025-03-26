@@ -1,7 +1,7 @@
 extends Node
 #conserva lo score_max tra le partite
 var score_max: int = 0
-var music = false
+var music = true
 var sfx = true
 #array contenente i punteggi migliori globali
 var best_score = []
@@ -81,7 +81,8 @@ func array_to_string(numbers: Array) -> String:
 #formatta l' array per inserire i risultati nello board score
 func array_to_numbered_string(scores: Array) -> String:
 	var result = ""
-	
+	#inverte l' array
+	scores.reverse()
 	# Itera sull'array con gli indici
 	for i in range(scores.size()):
 		result += str(i + 1) + ". " + str(scores[i]) + "\n"

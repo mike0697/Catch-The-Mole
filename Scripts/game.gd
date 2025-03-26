@@ -32,6 +32,11 @@ func _ready():
 	spawn_objects()
 	
 func initialize_game():
+	if lives == 0:
+		%hearthSprites.visible = false
+	else:
+		%hearthSprites.visible = true
+		%hearthSprites.frame = lives - 1
 	%LabelLives.text = "Lives: " + str(lives)
 	%LabelScore.text = "Score: " + str(score)
 	%LevelLabel.text = "Level: " + str(difficulty_level)
@@ -136,7 +141,7 @@ func _on_pumpkin_timeout(pumpkin):
 func update_score(points):
 	score = score + points
 	%LabelScore.text = "Score: " + str(score) + " "
-	
+	GPX.updateScore(score)
 	# Controlla se è il momento di aumentare la difficoltà
 	check_difficulty_increase()
 
@@ -157,6 +162,8 @@ func increase_difficulty():
 	
 	# Mostra un messaggio di livello
 	show_level_message()
+	
+	GPX.updateLevel(difficulty_level) 
 	
 	# Modifica l'intervallo di spawn in base al livello di difficoltà
 	if difficulty_level < 5:
@@ -200,6 +207,11 @@ func show_level_message():
 
 func update_lives(change):
 	lives = lives + change
+	if lives == 0:
+		%hearthSprites.visible = false
+	else:
+		%hearthSprites.visible = true
+		%hearthSprites.frame = lives - 1
 	%LabelLives.text = "Lives: " + str(lives) + " "
 	if lives <= 0:
 		game_over()
@@ -210,11 +222,11 @@ func game_over():
 		%NewRecordLabel.visible = true
 		Global.load_data()
 		var new_record = Global.check_data(score)
+		%ScoreBoard.visible = false
 		if new_record:
 			Global.save_data(score)
+			GPX.happyMoment()
 			%ScoreBoard.visible = true
-		else:
-			%ScoreBoard.visible = false
 	else:
 		%NewRecordLabel.visible = false
 	%ScoreLabel.text = "Score: " + str(score) + " "

@@ -1,15 +1,39 @@
-[gd_scene load_steps=11 format=3 uid="uid://gqi2myj10hiu"]
+[gd_scene load_steps=16 format=3 uid="uid://gqi2myj10hiu"]
 
 [ext_resource type="Texture2D" uid="uid://cmsm556fanar" path="res://Assets/background1.png" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://b6276ybqkbuqs" path="res://Scripts/game.gd" id="1_feb5d"]
 [ext_resource type="PackedScene" uid="uid://kv04obmjxhak" path="res://Scenes/talpa.tscn" id="2_fc0e3"]
 [ext_resource type="PackedScene" uid="uid://ddqolynja6nso" path="res://Scenes/zucca.tscn" id="3_7jktm"]
 [ext_resource type="Script" uid="uid://b3ay6q0tu2xe4" path="res://Scripts/mole_positions.gd" id="4_ryrav"]
+[ext_resource type="Texture2D" uid="uid://bq27314lhavji" path="res://Assets/hearth/1.png" id="6_215e1"]
 [ext_resource type="Script" uid="uid://bc60wncaycqy3" path="res://Scripts/menu.gd" id="6_eow3j"]
 [ext_resource type="Theme" uid="uid://da8vhrluvmuen" path="res://theme/theme.tres" id="6_ryrav"]
+[ext_resource type="Texture2D" uid="uid://bn4t4ad6guuwn" path="res://Assets/hearth/2.png" id="7_7sc4i"]
+[ext_resource type="Texture2D" uid="uid://cuvan0rqbjfs1" path="res://Assets/hearth/3.png" id="8_80cx4"]
 [ext_resource type="AudioStream" uid="uid://djpdwssmcyfnj" path="res://Assets/audio/Powerup_-_Jeremy_Blake.mp3" id="8_vef74"]
+[ext_resource type="Texture2D" uid="uid://cily1gc76g2ru" path="res://Assets/hearth/4.png" id="9_e8heu"]
 [ext_resource type="AudioStream" uid="uid://chjf3b4nwwmy0" path="res://Assets/audio/jembay-hit-10-rim.wav" id="9_vef74"]
 [ext_resource type="AudioStream" uid="uid://ba4vkooojbsdd" path="res://Assets/audio/madpancake__hit-impact.ogg" id="10_hve3p"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rvswv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_215e1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_7sc4i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_80cx4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_e8heu")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_feb5d")
@@ -42,10 +66,10 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -64.0
-offset_top = 15.0
-offset_right = 64.0
-offset_bottom = 41.0
+offset_left = -88.0
+offset_top = 16.0
+offset_right = 40.0
+offset_bottom = 42.0
 grow_horizontal = 2
 theme = ExtResource("6_ryrav")
 text = "Lives: 3"
@@ -92,6 +116,20 @@ theme = ExtResource("6_ryrav")
 text = "Level: 1"
 horizontal_alignment = 1
 
+[node name="Health" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="hearthSprites" type="AnimatedSprite2D" parent="UI/Health"]
+unique_name_in_owner = true
+position = Vector2(366, 50)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_rvswv")
+frame = 3
+speed_scale = 0.0
+
 [node name="MolePositions" type="Node2D" parent="."]
 script = ExtResource("4_ryrav")
 
@@ -102,6 +140,7 @@ script = ExtResource("6_eow3j")
 [node name="GameOver" type="Control" parent="Menu"]
 unique_name_in_owner = true
 process_mode = 3
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -296,7 +335,6 @@ text = "Return"
 
 [node name="HelpMenu" type="Control" parent="Menu"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -343,6 +381,20 @@ Otherwise you will lose a life."
 autowrap_mode = 3
 
 [node name="HSeparator2" type="HSeparator" parent="Menu/HelpMenu/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+theme = ExtResource("6_ryrav")
+
+[node name="Label3" type="Label" parent="Menu/HelpMenu/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme = ExtResource("6_ryrav")
+text = "Press ESC or P to pause the game.
+Press R to restart
+Have fun!"
+autowrap_mode = 3
+
+[node name="HSeparator3" type="HSeparator" parent="Menu/HelpMenu/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 15)
 layout_mode = 2
 theme = ExtResource("6_ryrav")
